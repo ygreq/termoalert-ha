@@ -21,7 +21,7 @@ from .const import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
-from .coordinator import normalize_text
+from .coordinator import async_fetch_cmteb_html, normalize_text
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -61,11 +61,13 @@ class TermoAlertConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Verify connectivity to CMTEB
                 session = async_get_clientsession(self.hass)
                 try:
-                    async with asyncio.timeout(15):
-                        async with session.get(CMTEB_URL, headers=DEFAULT_HEADERS) as resp:
-                            if resp.status != 200:
-                                errors["base"] = "cannot_connect"
-                except Exception:
+                    await async_fetch_cmteb_html(session)
+                except Exception as err:
+                    _LOGGER.error(
+                        "Eroare verificare conexiune CMTEB la configurare: %s (%s)",
+                        type(err).__name__,
+                        err,
+                    )
                     errors["base"] = "cannot_connect"
 
                 if not errors:

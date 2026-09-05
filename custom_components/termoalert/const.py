@@ -13,6 +13,10 @@ DEFAULT_NAME = "TermoAlert"
 
 # Remote source
 CMTEB_URL = "https://cmteb.ro/functionare_sistem_termoficare.php"
+CMTEB_URLS = [
+    "https://cmteb.ro/functionare_sistem_termoficare.php",
+    "https://www.cmteb.ro/functionare_sistem_termoficare.php",
+]
 DEFAULT_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "

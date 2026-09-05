@@ -4,10 +4,12 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
+import ssl
 import unicodedata
 from datetime import datetime, timedelta
 from typing import Any
 
+import aiohttp
 from bs4 import BeautifulSoup
 
 from homeassistant.core import HomeAssistant
@@ -16,6 +18,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import (
     CMTEB_URL,
+    CMTEB_URLS,
     CONF_SCAN_INTERVAL,
     CONF_SEARCH_TERM,
     CONF_SECTOR,
@@ -157,6 +160,48 @@ def parse_cmteb_html(html: str, target_sector: int, search_term: str) -> dict[st
     }
 
 
+async def async_fetch_cmteb_html(session: aiohttp.ClientSession) -> str:
+    """Fetch CMTEB outages HTML with automatic fallback and SSL error recovery."""
+    last_error: Exception | None = None
+
+    for url in CMTEB_URLS:
+        for verify_ssl in (True, False):
+            try:
+                _LOGGER.debug("Connecting to CMTEB at %s (ssl=%s)", url, verify_ssl)
+                async with asyncio.timeout(25):
+                    async with session.get(url, headers=DEFAULT_HEADERS, ssl=verify_ssl) as resp:
+                        if resp.status == 200:
+                            return await resp.text()
+                        _LOGGER.warning(
+                            "CMTEB server returned HTTP status %s for %s", resp.status, url
+                        )
+                        last_error = Exception(f"HTTP {resp.status}")
+            except (aiohttp.ClientConnectorCertificateError, ssl.SSLError) as err:
+                _LOGGER.warning(
+                    "SSL certificate verification failed for %s (%s). Retrying with ssl=False.",
+                    url,
+                    err,
+                )
+                last_error = err
+                continue  # Retry with verify_ssl=False
+            except asyncio.TimeoutError as err:
+                _LOGGER.warning("Connection timed out to CMTEB at %s (25s)", url)
+                last_error = err
+                break  # Don't retry same URL on timeout, try next URL
+            except aiohttp.ClientError as err:
+                _LOGGER.warning("Connection error to CMTEB at %s: %s", url, err)
+                last_error = err
+                break  # Try next URL
+            except Exception as err:
+                _LOGGER.warning("Unexpected error connecting to CMTEB at %s: %s", url, err)
+                last_error = err
+                break
+
+    if last_error:
+        raise last_error
+    raise Exception("Could not connect to CMTEB server")
+
+
 class TermoAlertCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Class to manage fetching TermoAlert data from CMTEB."""
 
@@ -188,12 +233,7 @@ class TermoAlertCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch and parse data from CMTEB."""
         try:
-            async with asyncio.timeout(20):
-                async with self.session.get(CMTEB_URL, headers=DEFAULT_HEADERS) as resp:
-                    if resp.status != 200:
-                        raise UpdateFailed(f"Serverul CMTEB a returnat codul HTTP {resp.status}")
-                    html = await resp.text()
-
+            html = await async_fetch_cmteb_html(self.session)
         except asyncio.TimeoutError as err:
             raise UpdateFailed("Timeout la conectarea cu cmteb.ro") from err
         except Exception as err:
