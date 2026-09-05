@@ -29,6 +29,7 @@ async def async_setup_entry(
 
     async_add_entities(
         [
+            TermoAlertOutageTextSensor(coordinator, entry),
             TermoAlertStatusSensor(coordinator, entry),
             TermoAlertRestorationSensor(coordinator, entry),
             TermoAlertCountdownSensor(coordinator, entry),
@@ -105,6 +106,32 @@ def format_agent_status(raw: str) -> str:
             return "Avarie încălzire"
 
     return raw
+
+
+class TermoAlertOutageTextSensor(TermoAlertBaseSensor):
+    """Sensor showing outage indicator directly as Romanian text (Problemă / OK)."""
+
+    _attr_translation_key = "outage_status"
+
+    def __init__(self, coordinator: TermoAlertCoordinator, entry: ConfigEntry) -> None:
+        """Initialize outage text sensor."""
+        super().__init__(coordinator, entry, "outage_status")
+
+    @property
+    def native_value(self) -> str:
+        """Return Problemă when affected, OK when normal."""
+        if not self.coordinator.data:
+            return "Necunoscut"
+        if self.coordinator.data.get("is_affected", False):
+            return "Problemă"
+        return "OK"
+
+    @property
+    def icon(self) -> str:
+        """Return dynamic icon."""
+        if self.coordinator.data and self.coordinator.data.get("is_affected", False):
+            return "mdi:alert-circle"
+        return "mdi:check-circle"
 
 
 class TermoAlertStatusSensor(TermoAlertBaseSensor):

@@ -43,6 +43,9 @@
       }
     },
     "sensor": {
+      "outage_status": {
+        "name": "Avarie activă"
+      },
       "service_status": {
         "name": "Stare serviciu"
       },

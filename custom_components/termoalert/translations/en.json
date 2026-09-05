@@ -43,6 +43,9 @@
       }
     },
     "sensor": {
+      "outage_status": {
+        "name": "Active outage"
+      },
       "service_status": {
         "name": "Service status"
       },
