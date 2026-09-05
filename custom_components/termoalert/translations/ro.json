@@ -35,7 +35,11 @@
   "entity": {
     "binary_sensor": {
       "outage": {
-        "name": "Avarie activă"
+        "name": "Avarie activă",
+        "state": {
+          "on": "Problemă",
+          "off": "OK"
+        }
       }
     },
     "sensor": {

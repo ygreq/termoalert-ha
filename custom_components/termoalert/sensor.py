@@ -1,6 +1,7 @@
 """Sensor platform for TermoAlert București."""
 from __future__ import annotations
 
+import unicodedata
 from datetime import datetime
 from typing import Any
 
@@ -65,6 +66,47 @@ class TermoAlertBaseSensor(CoordinatorEntity[TermoAlertCoordinator], SensorEntit
         )
 
 
+def format_agent_status(raw: str) -> str:
+    """Format CMTEB technical agent abbreviation into clear, friendly Romanian text."""
+    if not raw:
+        return "Avarie activă"
+
+    # Normalize diacritics to ASCII uppercase for robust matching
+    nfkd = unicodedata.normalize("NFKD", raw)
+    s = "".join(c for c in nfkd if not unicodedata.combining(c)).upper()
+
+    has_acc = "ACC" in s or "APA CALDA" in s
+    has_inc = "INC" in s or "INCALZIRE" in s
+    is_deficient = "DEFICIENT" in s
+    is_oprire = "OPRIRE" in s or "SISTARE" in s or "INTRERUP" in s
+
+    if is_deficient:
+        if has_acc and has_inc:
+            return "Deficiență apă caldă și încălzire (parametri scăzuți)"
+        elif has_acc:
+            return "Deficiență apă caldă (apă călâie / presiune redusă)"
+        elif has_inc:
+            return "Deficiență încălzire (calorifere călâi)"
+        return "Deficiență agent termic"
+    elif is_oprire:
+        if has_acc and has_inc:
+            return "Oprire apă caldă și încălzire (sistare completă)"
+        elif has_acc:
+            return "Oprire apă caldă (sistare completă)"
+        elif has_inc:
+            return "Oprire încălzire (sistare completă)"
+        return "Oprire agent termic"
+    else:
+        if has_acc and has_inc:
+            return "Avarie apă caldă și încălzire"
+        elif has_acc:
+            return "Avarie apă caldă"
+        elif has_inc:
+            return "Avarie încălzire"
+
+    return raw
+
+
 class TermoAlertStatusSensor(TermoAlertBaseSensor):
     """Sensor showing current service status."""
 
@@ -82,10 +124,11 @@ class TermoAlertStatusSensor(TermoAlertBaseSensor):
 
         data = self.coordinator.data
         if not data.get("is_affected", False):
-            return "Normal"
+            return "Normal (fără avarie)"
 
         active = data.get("active_outage") or {}
-        return active.get("agent_type", "Avarie activă")
+        raw = active.get("agent_type", "Avarie activă")
+        return format_agent_status(raw)
 
     @property
     def icon(self) -> str:
@@ -101,6 +144,7 @@ class TermoAlertStatusSensor(TermoAlertBaseSensor):
             return {}
         active = self.coordinator.data.get("active_outage") or {}
         return {
+            "agent_afectat_raw": active.get("agent_type"),
             "cauza": active.get("cause"),
             "punct_termic": active.get("matched_pt"),
             "adresa": active.get("matched_street"),

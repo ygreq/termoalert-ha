@@ -17,11 +17,12 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
   * Recunoaște abrevierile uzuale (`strada` = `str`, `bulevardul` = `bld`, `soseaua` = `sos`, `aleea` = `ale`, etc.).
   * Permite căutare după numele străzii, numărul de bloc sau direct după numele punctului termic.
 * **Entități create pentru fiecare adresă configurată:**
-  * 🔴 **`binary_sensor.<adresa>_avarie`**: Clasă `problem` (`on` = avarie/deficiență, `off` = normal).
+  * 🔴 **`binary_sensor.<adresa>_outage`**: Clasă `problem` (`Problemă` / `on` = avarie/deficiență activă, `OK` / `off` = normal).
     * *Atribute bogate:* cauza avariei, tipul agentului afectat, data/ora estimată de remediere, punctul termic și adresa exactă identificată.
-  * ℹ️ **`sensor.<adresa>_stare_serviciu`**: `Normal`, `Oprire ACC` (apă caldă), `Deficiență ACC`, `Oprire ÎNC` (încălzire) etc.
-  * ⏱️ **`sensor.<adresa>_data_estimata_remediere`**: Data și ora preconizate pentru repunerea în funcțiune.
-  * 🏙️ **`sensor.<adresa>_total_avarii_sector`**: Numărul total de avarii active din întregul sector.
+  * ℹ️ **`sensor.<adresa>_service_status`**: Mesaj clar și prietenos în limba română (ex: `Normal (fără avarie)`, `Deficiență apă caldă (apă călâie / presiune redusă)`, `Oprire apă caldă (sistare completă)`).
+  * ⏳ **`sensor.<adresa>_time_remaining`**: Numărătoare inversă formatată în zile și ore până la remediere (ex: `13 zile și 11 ore`).
+  * ⏱️ **`sensor.<adresa>_estimated_restoration`**: Data și ora preconizate pentru repunerea în funcțiune.
+  * 🏙️ **`sensor.<adresa>_sector_outages`**: Numărul total de avarii active din întregul sector.
 * **Interval de actualizare configurabil:** Implicit 15 minute (reglabil între 5 și 120 de minute din meniul *Configure*).
 * **Bilingv:** Suport complet pentru Română și Engleză.
 
@@ -82,6 +83,22 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 > Poți verifica în timp real cum sunt denumite oficial punctele termice și blocurile arondate pe pagina CMTEB:  
 > 🔗 **[Funcționare sistem termoficare CMTEB](https://cmteb.ro/functionare_sistem_termoficare.php)**  
 > Selectează tab-ul sectorului tău și folosește `Ctrl + F` pentru a căuta strada ta. Vei vedea lista exactă cu punctul termic și indicativele blocurilor afectate.
+
+---
+
+### 📖 Glosar Termeni & Abrevieri CMTEB
+
+În rapoartele și comunicatele oficiale CMTEB (Termoenergetica) vei întâlni frecvent aceste prescurtări:
+
+* **`ACC`**: **A**pă **C**aldă de **C**onsum (furnizată la robinet / duș).
+* **`ÎNC`**: **Înc**ălzire (agentul termic pentru calorifere).
+* **`Oprire ACC`**: Furnizarea apei calde este **oprită complet**.
+* **`Deficiență ACC`**: Apa caldă nu este sistată complet, dar este livrată **sub parametrii contractuali** (debit scăzut sau vine doar călâie/rece din cauza lipsei de presiune sau de temperatură din rețeaua primară).
+* **`Oprire ÎNC`**: Furnizarea căldurii în calorifere este oprită complet.
+* **`Deficiență ÎNC`**: Agentul termic pentru calorifere este livrat sub parametri contractuali (calorifere doar călâi).
+
+> [!NOTE]
+> Integrarea TermoAlert interpretează automat aceste coduri tehnice și afișează direct mesaje explicite în limba română în starea senzorului (`sensor.<adresa>_service_status`).
 
 ---
 
