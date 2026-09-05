@@ -77,6 +77,12 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 
 *Căutarea include normalizare automată:* poți scrie fără diacritice, cu litere mari sau mici, iar abrevierile comune (`strada` = `str`, `bulevardul` = `bld`, `soseaua` = `sos`, `aleea` = `ale`) sunt recunoscute automat.
 
+> [!TIP]
+> **Cum afli denumirea exactă a blocului sau a punctului tău termic:**  
+> Poți verifica în timp real cum sunt denumite oficial punctele termice și blocurile arondate pe pagina CMTEB:  
+> 🔗 **[Funcționare sistem termoficare CMTEB](https://cmteb.ro/functionare_sistem_termoficare.php)**  
+> Selectează tab-ul sectorului tău și folosește `Ctrl + F` pentru a căuta strada ta. Vei vedea lista exactă cu punctul termic și indicativele blocurilor afectate.
+
 ---
 
 ## 💡 Exemple de Automatizări
