@@ -67,7 +67,7 @@ class TermoAlertBaseSensor(CoordinatorEntity[TermoAlertCoordinator], SensorEntit
 
 
 def format_agent_status(raw: str) -> str:
-    """Format CMTEB technical agent abbreviation into clear, friendly Romanian text."""
+    """Format CMTEB technical agent abbreviation into concise Romanian text."""
     if not raw:
         return "Avarie activă"
 
@@ -82,23 +82,23 @@ def format_agent_status(raw: str) -> str:
 
     if is_deficient:
         if has_acc and has_inc:
-            return "Deficiență apă caldă și încălzire (parametri scăzuți)"
+            return "Deficiență apă & căldură"
         elif has_acc:
-            return "Deficiență apă caldă (apă călâie / presiune redusă)"
+            return "Deficiență apă caldă"
         elif has_inc:
-            return "Deficiență încălzire (calorifere călâi)"
+            return "Deficiență încălzire"
         return "Deficiență agent termic"
     elif is_oprire:
         if has_acc and has_inc:
-            return "Oprire apă caldă și încălzire (sistare completă)"
+            return "Oprire apă & căldură"
         elif has_acc:
-            return "Oprire apă caldă (sistare completă)"
+            return "Oprire apă caldă"
         elif has_inc:
-            return "Oprire încălzire (sistare completă)"
+            return "Oprire încălzire"
         return "Oprire agent termic"
     else:
         if has_acc and has_inc:
-            return "Avarie apă caldă și încălzire"
+            return "Avarie apă & căldură"
         elif has_acc:
             return "Avarie apă caldă"
         elif has_inc:
@@ -124,7 +124,7 @@ class TermoAlertStatusSensor(TermoAlertBaseSensor):
 
         data = self.coordinator.data
         if not data.get("is_affected", False):
-            return "Normal (fără avarie)"
+            return "Normal"
 
         active = data.get("active_outage") or {}
         raw = active.get("agent_type", "Avarie activă")
