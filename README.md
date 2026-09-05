@@ -203,11 +203,15 @@ action:
 
 Rândurile pentru **Timp Rămas** și **Termen Remediere** apar automat **doar dacă există o avarie activă** (`Problemă` / `on`):
 
+<p align="center">
+  <img src="docs/termoalert_card.png" alt="Previzualizare Card TermoAlert Lovelace" width="380">
+</p>
+
 ```yaml
 type: entities
 title: TermoAlert
 entities:
-  - entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
+  - entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_active_outage
     name: Avarie Activă
   - entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_service_status
     name: Stare Serviciu
@@ -226,7 +230,7 @@ entities:
       entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration
       name: Termen Remediere
   - entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages
-    name: Total Avarii Sector
+    name: Avarii Sector 2
 ```
 
 <a id="card-mushroom"></a>
