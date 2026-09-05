@@ -1,6 +1,7 @@
 """Config flow for TermoAlert București integration."""
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Any
 
@@ -16,6 +17,7 @@ from .const import (
     CONF_SCAN_INTERVAL,
     CONF_SEARCH_TERM,
     CONF_SECTOR,
+    DEFAULT_HEADERS,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
@@ -59,9 +61,10 @@ class TermoAlertConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Verify connectivity to CMTEB
                 session = async_get_clientsession(self.hass)
                 try:
-                    async with session.get(CMTEB_URL, timeout=15) as resp:
-                        if resp.status != 200:
-                            errors["base"] = "cannot_connect"
+                    async with asyncio.timeout(15):
+                        async with session.get(CMTEB_URL, headers=DEFAULT_HEADERS) as resp:
+                            if resp.status != 200:
+                                errors["base"] = "cannot_connect"
                 except Exception:
                     errors["base"] = "cannot_connect"
 

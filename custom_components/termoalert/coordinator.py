@@ -19,6 +19,7 @@ from .const import (
     CONF_SCAN_INTERVAL,
     CONF_SEARCH_TERM,
     CONF_SECTOR,
+    DEFAULT_HEADERS,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
@@ -186,19 +187,9 @@ class TermoAlertCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch and parse data from CMTEB."""
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
-            ),
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "ro-RO,ro;q=0.9,en-US;q=0.8,en;q=0.7",
-        }
-
         try:
             async with asyncio.timeout(20):
-                async with self.session.get(CMTEB_URL, headers=headers) as resp:
+                async with self.session.get(CMTEB_URL, headers=DEFAULT_HEADERS) as resp:
                     if resp.status != 200:
                         raise UpdateFailed(f"Serverul CMTEB a returnat codul HTTP {resp.status}")
                     html = await resp.text()
