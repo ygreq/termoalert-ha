@@ -17,6 +17,7 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 * [⚙️ Configurare](#configurare)
   * [💡 Cum funcționează căutarea (Stradă vs. Bloc vs. Punct termic)](#cum-functioneaza-cautarea)
   * [📖 Glosar Termeni & Abrevieri CMTEB](#glosar-termeni-abrevieri-cmteb)
+    * [📊 Tabel comparativ stări senzor](#tabel-comparativ-stari)
 * [💡 Exemple de Automatizări](#exemple-de-automatizari)
   * [1. Pornire automată boiler la avarie](#automatizare-pornire-boiler)
   * [2. Oprire boiler la remediere](#automatizare-oprire-boiler)
@@ -125,6 +126,19 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 
 > [!NOTE]
 > Integrarea TermoAlert interpretează automat aceste coduri tehnice și afișează direct mesaje explicite în limba română în starea senzorului (`sensor.<adresa>_service_status`).
+
+<a id="tabel-comparativ-stari"></a>
+#### 📊 Tabel comparativ pentru toate stările:
+
+| Stare senzor | Descriere | Notare tehnică CMTEB |
+|---|---|---|
+| **`Normal`** | Serviciul funcționează în parametri normali (fără avarie) | — |
+| **`Deficiență apă caldă`** | Apă caldă livrată sub parametri contractuali (apă călâie / debit și presiune reduse) | `Deficienta ACC` |
+| **`Oprire apă caldă`** | Furnizarea apei calde este sistată complet | `Oprire ACC` |
+| **`Deficiență încălzire`** | Agentul termic pentru calorifere nu atinge temperatura optimă (calorifere călâi) | `Deficienta INC` |
+| **`Oprire încălzire`** | Furnizarea încălzirii în calorifere este oprită complet | `Oprire INC` |
+| **`Deficiență apă & căldură`** | Atât apa caldă, cât și încălzirea sunt furnizate sub parametri contractuali | `Deficienta ACC / INC` |
+| **`Oprire apă & căldură`** | Atât apa caldă, cât și încălzirea sunt oprite complet | `Oprire ACC / INC` |
 
 ---
 
