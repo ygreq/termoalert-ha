@@ -148,7 +148,39 @@ action:
 
 ---
 
-## 📊 Exemplu Card Lovelace (Mushroom Card)
+## 📊 Exemple Carduri Lovelace
+
+### 1. Card Standard (Entities Card cu numărătoare inversă condiționată)
+
+Rândurile pentru **Timp Rămas Până la Remediere** și **Data Estimată Remediere** apar automat **doar dacă există o avarie activă** (`Problemă` / `on`):
+
+```yaml
+type: entities
+title: TermoAlert
+entities:
+  - entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
+    name: Avarie Activă
+  - entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_service_status
+    name: Stare Serviciu
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
+        state: "on"
+    row:
+      entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_time_remaining
+      name: Timp Rămas Până la Remediere
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
+        state: "on"
+    row:
+      entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration
+      name: Data Estimată Remediere
+  - entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages
+    name: Total Avarii Sector
+```
+
+### 2. Card Mushroom (Opțional)
 
 Dacă folosești **Mushroom Cards** din HACS:
 

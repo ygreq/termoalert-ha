@@ -238,3 +238,31 @@ class TermoAlertCountdownSensor(TermoAlertBaseSensor):
                 return f"{mins} minute"
         except Exception:
             return "Format necunoscut"
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return countdown calculation details."""
+        if not self.coordinator.data or not self.coordinator.data.get("is_affected", False):
+            return {}
+
+        active = self.coordinator.data.get("active_outage") or {}
+        raw = active.get("estimated_restoration")
+        if not raw:
+            return {}
+
+        try:
+            dt = datetime.strptime(raw.strip(), "%d.%m.%Y %H:%M")
+            now = datetime.now()
+            diff_seconds = int((dt - now).total_seconds())
+
+            return {
+                "zile_ramase": max(0, diff_seconds // 86400),
+                "ore_ramase": max(0, (diff_seconds % 86400) // 3600),
+                "minute_ramase": max(0, (diff_seconds % 3600) // 60),
+                "total_secunde": max(0, diff_seconds),
+                "termen_depasit": diff_seconds <= 0,
+                "termen_estimat": raw.strip(),
+            }
+        except Exception:
+            return {}
+
