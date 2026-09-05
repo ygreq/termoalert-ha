@@ -201,7 +201,7 @@ action:
 <a id="card-standard-entities"></a>
 ### 1. Card Standard (Entities Card cu numărătoare inversă condiționată)
 
-Rândurile pentru **Timp Rămas Până la Remediere** și **Data Estimată Remediere** apar automat **doar dacă există o avarie activă** (`Problemă` / `on`):
+Rândurile pentru **Timp Rămas** și **Termen Remediere** apar automat **doar dacă există o avarie activă** (`Problemă` / `on`):
 
 ```yaml
 type: entities
@@ -217,14 +217,14 @@ entities:
         state: "on"
     row:
       entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_time_remaining
-      name: Timp Rămas Până la Remediere
+      name: Timp Rămas
   - type: conditional
     conditions:
       - entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
         state: "on"
     row:
       entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration
-      name: Data Estimată Remediere
+      name: Termen Remediere
   - entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages
     name: Total Avarii Sector
 ```

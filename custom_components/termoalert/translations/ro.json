@@ -47,10 +47,10 @@
         "name": "Stare serviciu"
       },
       "estimated_restoration": {
-        "name": "Data estimată remediere"
+        "name": "Termen remediere"
       },
       "time_remaining": {
-        "name": "Timp rămas până la remediere"
+        "name": "Timp rămas"
       },
       "sector_outages": {
         "name": "Total avarii sector"

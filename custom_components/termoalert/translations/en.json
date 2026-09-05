@@ -47,10 +47,10 @@
         "name": "Service status"
       },
       "estimated_restoration": {
-        "name": "Estimated restoration"
+        "name": "Estimated fix"
       },
       "time_remaining": {
-        "name": "Time remaining until restoration"
+        "name": "Time remaining"
       },
       "sector_outages": {
         "name": "Total sector outages"
