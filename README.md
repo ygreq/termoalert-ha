@@ -105,10 +105,14 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 *Căutarea include normalizare automată:* poți scrie fără diacritice, cu litere mari sau mici, iar abrevierile comune (`strada` = `str`, `bulevardul` = `bld`, `soseaua` = `sos`, `aleea` = `ale`) sunt recunoscute automat.
 
 > [!TIP]
-> **Cum afli denumirea exactă a blocului sau a punctului tău termic:**  
-> Poți verifica în timp real cum sunt denumite oficial punctele termice și blocurile arondate pe pagina CMTEB:  
+> **Stradă sau indicativ de bloc — ce să alegi în practică?**  
+> * **Căutarea după numele străzii (ex: `Iancului`):** Este permisă și funcționează perfect. Este ideală dacă locuiești la **casă / vilă** (fără indicativ de bloc) sau dacă vrei să fii la curent cu **orice avarie de pe întreaga stradă**. Pe străzile lungi cu mai multe tronsoane sau puncte termice, vei primi însă alerte chiar dacă avaria este la celălalt capăt al străzii, iar la tine funcționează normal.
+> * **Căutarea după indicativul blocului (ex: `A12` sau `bl. 403`):** Este **recomandată pentru imobile colective (blocuri)**, oferind precizie maximă. Primești alertă **strict când blocul tău este afectat direct**, eliminând orice alertă fals-pozitivă.
+> 
+> 🔍 **Cum verifici denumirea exactă a blocului sau a punctului termic:**  
+> Poți consulta lista oficială actualizată permanent pe site-ul Termoenergetica:  
 > 🔗 **[Funcționare sistem termoficare CMTEB](https://cmteb.ro/functionare_sistem_termoficare.php)**  
-> Selectează tab-ul sectorului tău și folosește `Ctrl + F` pentru a căuta strada ta. Vei vedea lista exactă cu punctul termic și indicativele blocurilor afectate.
+> *(Alege sectorul tău și caută strada cu `Ctrl + F` pentru a vedea denumirea exactă a punctului termic și lista blocurilor arondate).*
 
 ---
 
