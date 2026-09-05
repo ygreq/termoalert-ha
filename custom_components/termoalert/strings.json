@@ -35,7 +35,7 @@
   "entity": {
     "binary_sensor": {
       "outage": {
-        "name": "Avarie"
+        "name": "Avarie activă"
       }
     },
     "sensor": {
@@ -44,6 +44,9 @@
       },
       "estimated_restoration": {
         "name": "Data estimată remediere"
+      },
+      "time_remaining": {
+        "name": "Timp rămas până la remediere"
       },
       "sector_outages": {
         "name": "Total avarii sector"

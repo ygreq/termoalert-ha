@@ -1,6 +1,7 @@
 """Sensor platform for TermoAlert București."""
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -29,6 +30,7 @@ async def async_setup_entry(
         [
             TermoAlertStatusSensor(coordinator, entry),
             TermoAlertRestorationSensor(coordinator, entry),
+            TermoAlertCountdownSensor(coordinator, entry),
             TermoAlertSectorOutagesSensor(coordinator, entry),
         ]
     )
@@ -147,3 +149,48 @@ class TermoAlertSectorOutagesSensor(TermoAlertBaseSensor):
         if not self.coordinator.data:
             return 0
         return int(self.coordinator.data.get("total_sector_outages", 0))
+
+
+class TermoAlertCountdownSensor(TermoAlertBaseSensor):
+    """Sensor showing countdown (days & hours) until restoration."""
+
+    _attr_translation_key = "time_remaining"
+    _attr_icon = "mdi:timer-sand"
+
+    def __init__(self, coordinator: TermoAlertCoordinator, entry: ConfigEntry) -> None:
+        """Initialize countdown sensor."""
+        super().__init__(coordinator, entry, "time_remaining")
+
+    @property
+    def native_value(self) -> str:
+        """Return countdown string in Romanian."""
+        if not self.coordinator.data or not self.coordinator.data.get("is_affected", False):
+            return "Fără avarie"
+
+        active = self.coordinator.data.get("active_outage") or {}
+        raw = active.get("estimated_restoration")
+        if not raw:
+            return "Fără estimare"
+
+        try:
+            dt = datetime.strptime(raw.strip(), "%d.%m.%Y %H:%M")
+            now = datetime.now()
+            diff_seconds = int((dt - now).total_seconds())
+
+            if diff_seconds <= 0:
+                return "Termen depășit"
+
+            days = diff_seconds // 86400
+            hours = (diff_seconds % 86400) // 3600
+
+            if days > 0 and hours > 0:
+                return f"{days} zile și {hours} ore"
+            elif days > 0:
+                return f"{days} zile"
+            elif hours > 0:
+                return f"{hours} ore"
+            else:
+                mins = (diff_seconds % 3600) // 60
+                return f"{mins} minute"
+        except Exception:
+            return "Format necunoscut"

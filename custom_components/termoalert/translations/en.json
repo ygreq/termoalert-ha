@@ -45,6 +45,9 @@
       "estimated_restoration": {
         "name": "Estimated restoration"
       },
+      "time_remaining": {
+        "name": "Time remaining until restoration"
+      },
       "sector_outages": {
         "name": "Total sector outages"
       }
