@@ -8,6 +8,26 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 
 ---
 
+## 📑 Cuprins
+
+* [🌟 Caracteristici principale](#caracteristici-principale)
+* [📦 Instalare](#instalare)
+  * [Metoda 1: Prin HACS (Recomandat)](#instalare-hacs)
+  * [Metoda 2: Instalare manuală](#instalare-manuala)
+* [⚙️ Configurare](#configurare)
+  * [💡 Cum funcționează căutarea (Stradă vs. Bloc vs. Punct termic)](#cum-functioneaza-cautarea)
+  * [📖 Glosar Termeni & Abrevieri CMTEB](#glosar-termeni-abrevieri-cmteb)
+* [💡 Exemple de Automatizări](#exemple-de-automatizari)
+  * [1. Pornire automată boiler la avarie](#automatizare-pornire-boiler)
+  * [2. Oprire boiler la remediere](#automatizare-oprire-boiler)
+* [📊 Exemple Carduri Lovelace](#exemple-carduri-lovelace)
+  * [1. Card Standard (Entities cu numărătoare inversă condiționată)](#card-standard-entities)
+  * [2. Card Mushroom (Opțional)](#card-mushroom)
+* [⚖️ Sursă de Date & Disclaimer](#sursa-de-date-disclaimer)
+
+---
+
+<a id="caracteristici-principale"></a>
 ## 🌟 Caracteristici principale
 
 * **Configurare 100% din interfața vizuală (UI):** Fără linii de cod în `configuration.yaml`.
@@ -19,7 +39,7 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 * **Entități create pentru fiecare adresă configurată:**
   * 🔴 **`binary_sensor.<adresa>_outage`**: Clasă `problem` (`Problemă` / `on` = avarie/deficiență activă, `OK` / `off` = normal).
     * *Atribute bogate:* cauza avariei, tipul agentului afectat, data/ora estimată de remediere, punctul termic și adresa exactă identificată.
-  * ℹ️ **`sensor.<adresa>_service_status`**: Mesaj clar și prietenos în limba română (ex: `Normal (fără avarie)`, `Deficiență apă caldă (apă călâie / presiune redusă)`, `Oprire apă caldă (sistare completă)`).
+  * ℹ️ **`sensor.<adresa>_service_status`**: Mesaj clar și concis în limba română (ex: `Normal`, `Deficiență apă caldă`, `Oprire apă caldă`, `Deficiență încălzire`).
   * ⏳ **`sensor.<adresa>_time_remaining`**: Numărătoare inversă formatată în zile și ore până la remediere (ex: `13 zile și 11 ore`).
   * ⏱️ **`sensor.<adresa>_estimated_restoration`**: Data și ora preconizate pentru repunerea în funcțiune.
   * 🏙️ **`sensor.<adresa>_sector_outages`**: Numărul total de avarii active din întregul sector.
@@ -28,8 +48,10 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 
 ---
 
+<a id="instalare"></a>
 ## 📦 Instalare
 
+<a id="instalare-hacs"></a>
 ### Metoda 1: Prin HACS (Recomandat)
 
 1. Deschide **HACS** în Home Assistant.
@@ -43,6 +65,7 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 6. Caută acum în HACS **TermoAlert București (CMTEB)** și apasă **Download**.
 7. **Repornește Home Assistant** (`Settings` -> `System` -> `Restart`).
 
+<a id="instalare-manuala"></a>
 ### Metoda 2: Instalare manuală
 
 1. Descarcă arhiva release-ului sau clonează repository-ul.
@@ -51,6 +74,7 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 
 ---
 
+<a id="configurare"></a>
 ## ⚙️ Configurare
 
 1. În Home Assistant, mergi la **Settings (Setări)** ➔ **Devices & Services (Dispozitive și servicii)**.
@@ -62,6 +86,7 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 
 ---
 
+<a id="cum-functioneaza-cautarea"></a>
 ### 💡 Cum funcționează căutarea (Stradă vs. Indicativ Bloc vs. Punct termic)
 
 > [!IMPORTANT]
@@ -86,6 +111,7 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 
 ---
 
+<a id="glosar-termeni-abrevieri-cmteb"></a>
 ### 📖 Glosar Termeni & Abrevieri CMTEB
 
 În rapoartele și comunicatele oficiale CMTEB (Termoenergetica) vei întâlni frecvent aceste prescurtări:
@@ -102,8 +128,10 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 
 ---
 
+<a id="exemple-de-automatizari"></a>
 ## 💡 Exemple de Automatizări
 
+<a id="automatizare-pornire-boiler"></a>
 ### 1. Pornire automată boiler electric când apare o avarie de apă caldă
 
 ```yaml
@@ -111,7 +139,7 @@ alias: "TermoAlert - Comutare Boiler la Avarie"
 description: "Pornește boilerul dacă apa caldă este oprită de CMTEB"
 trigger:
   - platform: state
-    entity_id: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie
+    entity_id: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
     to: "on"
 action:
   - service: switch.turn_on
@@ -122,11 +150,12 @@ action:
       title: "⚠️ Avarie Termoenergetica!"
       message: >
         S-a oprit apa caldă la adresa ta. 
-        Cauza: {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie', 'cauza') }}
-        Remediere estimată: {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie', 'estimare_punere_in_functiune') }}
+        Cauza: {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'cauza') }}
+        Remediere estimată: {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'estimare_punere_in_functiune') }}
         Boilerul electric a fost pornit automat.
 ```
 
+<a id="automatizare-oprire-boiler"></a>
 ### 2. Oprire boiler când avaria a fost remediată de CMTEB
 
 ```yaml
@@ -134,7 +163,7 @@ alias: "TermoAlert - Oprire Boiler la Remediere"
 description: "Oprește boilerul când apa caldă revine la parametri"
 trigger:
   - platform: state
-    entity_id: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie
+    entity_id: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
     to: "off"
 action:
   - service: switch.turn_off
@@ -148,8 +177,10 @@ action:
 
 ---
 
+<a id="exemple-carduri-lovelace"></a>
 ## 📊 Exemple Carduri Lovelace
 
+<a id="card-standard-entities"></a>
 ### 1. Card Standard (Entities Card cu numărătoare inversă condiționată)
 
 Rândurile pentru **Timp Rămas Până la Remediere** și **Data Estimată Remediere** apar automat **doar dacă există o avarie activă** (`Problemă` / `on`):
@@ -180,6 +211,7 @@ entities:
     name: Total Avarii Sector
 ```
 
+<a id="card-mushroom"></a>
 ### 2. Card Mushroom (Opțional)
 
 Dacă folosești **Mushroom Cards** din HACS:
@@ -190,19 +222,19 @@ cards:
   - type: custom:mushroom-template-card
     primary: Termoenergetica (Acasă)
     secondary: >
-      {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie', 'on') %}
-        {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie', 'agent_afectat') }} - Până la: {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie', 'estimare_punere_in_functiune') }}
+      {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
+        {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'agent_afectat') }} - Până la: {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'estimare_punere_in_functiune') }}
       {% else %}
         Serviciu activ în parametri normali
       {% endif %}
     icon: >
-      {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie', 'on') %}
+      {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
         mdi:water-boiler-off
       {% else %}
         mdi:water-boiler
       {% endif %}
     icon_color: >
-      {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_avarie', 'on') %}
+      {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
         red
       {% else %}
         green
@@ -211,6 +243,7 @@ cards:
 
 ---
 
+<a id="sursa-de-date-disclaimer"></a>
 ## ⚖️ Sursă de Date & Disclaimer
 
 * Datele sunt preluate public din secțiunea oficială [Funcționare sistem termoficare](https://cmteb.ro/functionare_sistem_termoficare.php) a Companiei Municipale Termoenergetica București S.A.
