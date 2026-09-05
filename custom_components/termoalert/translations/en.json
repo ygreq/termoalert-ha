@@ -1,0 +1,53 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "TermoAlert Bucharest",
+        "description": "Configure district heating & hot water outage monitoring from Termoenergetica (CMTEB).",
+        "data": {
+          "sector": "Sector",
+          "search_term": "Street name, building number or thermal station",
+          "scan_interval": "Check interval (minutes)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to cmteb.ro server.",
+      "search_term_too_short": "Please enter at least 3 characters for the search."
+    },
+    "abort": {
+      "already_configured": "This address is already configured in TermoAlert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "TermoAlert Options",
+        "description": "Modify address parameters or polling interval.",
+        "data": {
+          "sector": "Sector",
+          "search_term": "Street name, building number or thermal station",
+          "scan_interval": "Check interval (minutes)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "outage": {
+        "name": "Outage"
+      }
+    },
+    "sensor": {
+      "service_status": {
+        "name": "Service status"
+      },
+      "estimated_restoration": {
+        "name": "Estimated restoration"
+      },
+      "sector_outages": {
+        "name": "Total sector outages"
+      }
+    }
+  }
+}

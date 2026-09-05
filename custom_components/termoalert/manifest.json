@@ -1,0 +1,11 @@
+{
+  "domain": "termoalert",
+  "name": "TermoAlert București (CMTEB)",
+  "codeowners": ["@ygreq"],
+  "config_flow": true,
+  "documentation": "https://github.com/ygreq/termoalert-ha",
+  "issue_tracker": "https://github.com/ygreq/termoalert-ha/issues",
+  "iot_class": "cloud_polling",
+  "requirements": ["beautifulsoup4>=4.11.0"],
+  "version": "1.0.0"
+}

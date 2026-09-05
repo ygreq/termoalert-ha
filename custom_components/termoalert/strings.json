@@ -1,0 +1,53 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "TermoAlert București",
+        "description": "Configurează monitorizarea avariilor de apă caldă și încălzire de la Termoenergetica (CMTEB).",
+        "data": {
+          "sector": "Sectorul",
+          "search_term": "Nume stradă, număr bloc sau punct termic",
+          "scan_interval": "Interval verificare (minute)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nu s-a putut realiza conexiunea la serverul cmteb.ro.",
+      "search_term_too_short": "Te rugăm să introduci cel puțin 3 caractere pentru căutare."
+    },
+    "abort": {
+      "already_configured": "Această adresă este deja configurată în TermoAlert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opțiuni TermoAlert București",
+        "description": "Modifică parametrii adresei sau intervalul de interogare.",
+        "data": {
+          "sector": "Sectorul",
+          "search_term": "Nume stradă, număr bloc sau punct termic",
+          "scan_interval": "Interval verificare (minute)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "outage": {
+        "name": "Avarie"
+      }
+    },
+    "sensor": {
+      "service_status": {
+        "name": "Stare serviciu"
+      },
+      "estimated_restoration": {
+        "name": "Data estimată remediere"
+      },
+      "sector_outages": {
+        "name": "Total avarii sector"
+      }
+    }
+  }
+}

@@ -1,0 +1,149 @@
+"""Sensor platform for TermoAlert București."""
+from __future__ import annotations
+
+from typing import Any
+
+from homeassistant.components.sensor import (
+    SensorEntity,
+    SensorStateClass,
+)
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
+
+from .const import CMTEB_URL, DOMAIN, MANUFACTURER, MODEL
+from .coordinator import TermoAlertCoordinator
+
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Set up TermoAlert sensor entities from a config entry."""
+    coordinator: TermoAlertCoordinator = hass.data[DOMAIN][entry.entry_id]
+
+    async_add_entities(
+        [
+            TermoAlertStatusSensor(coordinator, entry),
+            TermoAlertRestorationSensor(coordinator, entry),
+            TermoAlertSectorOutagesSensor(coordinator, entry),
+        ]
+    )
+
+
+class TermoAlertBaseSensor(CoordinatorEntity[TermoAlertCoordinator], SensorEntity):
+    """Base class for TermoAlert sensors."""
+
+    _attr_has_entity_name = True
+
+    def __init__(
+        self,
+        coordinator: TermoAlertCoordinator,
+        entry: ConfigEntry,
+        sensor_type: str,
+    ) -> None:
+        """Initialize the base sensor."""
+        super().__init__(coordinator)
+        self._entry = entry
+        self._sensor_type = sensor_type
+        self._attr_unique_id = f"{entry.entry_id}_{sensor_type}"
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device information."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._entry.entry_id)},
+            name=f"TermoAlert {self._entry.title}",
+            manufacturer=MANUFACTURER,
+            model=MODEL,
+            configuration_url=CMTEB_URL,
+        )
+
+
+class TermoAlertStatusSensor(TermoAlertBaseSensor):
+    """Sensor showing current service status."""
+
+    _attr_translation_key = "service_status"
+
+    def __init__(self, coordinator: TermoAlertCoordinator, entry: ConfigEntry) -> None:
+        """Initialize status sensor."""
+        super().__init__(coordinator, entry, "service_status")
+
+    @property
+    def native_value(self) -> str:
+        """Return the current service status."""
+        if not self.coordinator.data:
+            return "Necunoscut"
+
+        data = self.coordinator.data
+        if not data.get("is_affected", False):
+            return "Normal"
+
+        active = data.get("active_outage") or {}
+        return active.get("agent_type", "Avarie activă")
+
+    @property
+    def icon(self) -> str:
+        """Return dynamic icon."""
+        if self.coordinator.data and self.coordinator.data.get("is_affected", False):
+            return "mdi:alert-decagram"
+        return "mdi:check-decagram"
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return extra attributes."""
+        if not self.coordinator.data:
+            return {}
+        active = self.coordinator.data.get("active_outage") or {}
+        return {
+            "cauza": active.get("cause"),
+            "punct_termic": active.get("matched_pt"),
+            "adresa": active.get("matched_street"),
+        }
+
+
+class TermoAlertRestorationSensor(TermoAlertBaseSensor):
+    """Sensor showing estimated restoration time."""
+
+    _attr_translation_key = "estimated_restoration"
+    _attr_icon = "mdi:clock-alert-outline"
+
+    def __init__(self, coordinator: TermoAlertCoordinator, entry: ConfigEntry) -> None:
+        """Initialize restoration time sensor."""
+        super().__init__(coordinator, entry, "estimated_restoration")
+
+    @property
+    def native_value(self) -> str:
+        """Return estimated restoration date and time."""
+        if not self.coordinator.data:
+            return "Necunoscut"
+
+        data = self.coordinator.data
+        if not data.get("is_affected", False):
+            return "Nicio avarie"
+
+        active = data.get("active_outage") or {}
+        return active.get("estimated_restoration", "Fără estimare")
+
+
+class TermoAlertSectorOutagesSensor(TermoAlertBaseSensor):
+    """Sensor showing total number of active outages in the configured sector."""
+
+    _attr_translation_key = "sector_outages"
+    _attr_icon = "mdi:city-variant-outline"
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = "avarii"
+
+    def __init__(self, coordinator: TermoAlertCoordinator, entry: ConfigEntry) -> None:
+        """Initialize sector outages sensor."""
+        super().__init__(coordinator, entry, "sector_outages")
+
+    @property
+    def native_value(self) -> int:
+        """Return total active outages in this sector."""
+        if not self.coordinator.data:
+            return 0
+        return int(self.coordinator.data.get("total_sector_outages", 0))
