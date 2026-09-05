@@ -57,9 +57,25 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
 3. Caută **TermoAlert București (CMTEB)**.
 4. Completează datele:
    * **Sectorul:** Selectează sectorul (1 - 6).
-   * **Stradă / Punct termic:** Introdu numele străzii tale (ex: `Elev Stefan Stefanescu` sau `Pantelimon` sau `Titan`).
-   * **Interval verificare:** Implicit 15 minute.
 5. Apasă **Submit**. Dispozitivul și senzorii vor fi creați automat!
+
+---
+
+### 💡 Cum funcționează căutarea (Stradă vs. Indicativ Bloc vs. Punct termic)
+
+> [!IMPORTANT]
+> **Formatul adreselor în evidențele CMTEB:**  
+> În baza de date oficială a Termoenergetica (CMTEB), adresele sunt înregistrate după **stradă și indicativul blocului** (ex: `bl. A1`, `bl. M12`, `bl. 403`), **NU după numărul poștal al străzii** (nu se folosesc numere de tipul „nr. 25” sau „nr. 104” pentru imobile colective).
+
+#### Cum să alegi termenul de căutare:
+
+| Ce introduci la căutare | Exemple generice | Ce rezultate primești |
+|---|---|---|
+| **Indicativul blocului tău** *(Recomandat pentru precizie maximă)* | `A12` sau `bl. 403` | Alerte **strict** când blocul tău este afectat de o avarie sau deficiență. |
+| **Numele străzii** | `Iancului` sau `Măgura Vulturului` | Alerte pentru **orice avarie** de pe acea stradă (chiar dacă afectează alt punct termic sau alt tronson de pe stradă). |
+| **Numele punctului termic** | `21 Pantelimon` | Alerte pentru toate blocurile alimentate de acel punct termic. |
+
+*Căutarea include normalizare automată:* poți scrie fără diacritice, cu litere mari sau mici, iar abrevierile comune (`strada` = `str`, `bulevardul` = `bld`, `soseaua` = `sos`, `aleea` = `ale`) sunt recunoscute automat.
 
 ---
 
