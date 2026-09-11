@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.png" alt="TermoAlert Logo" width="180">
+</p>
+
 # TermoAlert București (CMTEB) — Home Assistant Integration
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/default)
