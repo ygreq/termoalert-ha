@@ -96,15 +96,18 @@ class TermoAlertConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         config_entry: config_entries.ConfigEntry,
     ) -> config_entries.OptionsFlow:
         """Get the options flow for this handler."""
-        return TermoAlertOptionsFlowHandler(config_entry)
+        return TermoAlertOptionsFlowHandler()
 
 
 class TermoAlertOptionsFlowHandler(config_entries.OptionsFlow):
-    """Handle options for TermoAlert București."""
+    """Handle options for TermoAlert București.
 
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
-        self.config_entry = config_entry
+    Note: no __init__ override here. Since Home Assistant 2025.12,
+    OptionsFlow.config_entry is a read-only property populated
+    automatically by the framework; assigning to it manually (the old
+    boilerplate pattern) raises:
+      AttributeError: property 'config_entry' of '...' object has no setter
+    """
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
