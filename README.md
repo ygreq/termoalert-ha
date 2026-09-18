@@ -288,8 +288,6 @@ cards:
 
 Dacă această integrare îți este utilă și dorești să sprijini dezvoltarea și mentenanța ei:
 
-> *Free to use, but not free to maintain. Sponsorship helps keep the project healthy and growing.*
-
 <a href="https://www.buymeacoffee.com/ygreq">
   <img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
 </a>
