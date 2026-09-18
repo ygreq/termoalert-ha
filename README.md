@@ -7,8 +7,12 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/default)
 [![GitHub Release](https://img.shields.io/github/v/release/ygreq/termoalert-ha?style=flat-square)](https://github.com/ygreq/termoalert-ha/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=flat-square&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/ygreq)
 
 Integrare Home Assistant pentru monitorizarea în timp real a avariilor și întreruperilor de furnizare a apei calde și încălzirii din municipiul București, folosind datele oficiale publicate de **Compania Municipală Termoenergetica București (CMTEB)**.
+
+> ☕ **Free to use, but not free to maintain. Sponsorship helps keep the project healthy and growing:**  
+> [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=flat-square&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/ygreq) &nbsp; [buymeacoffee.com/ygreq](https://www.buymeacoffee.com/ygreq)
 
 ---
 
@@ -29,6 +33,7 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
   * [1. Card Standard (Entities cu numărătoare inversă condiționată)](#card-standard-entities)
   * [2. Card Mushroom (Opțional)](#card-mushroom)
 * [⚖️ Sursă de Date & Disclaimer](#sursa-de-date-disclaimer)
+* [☕ Susținere / Support](#sustinere-support)
 
 ---
 
@@ -275,3 +280,18 @@ cards:
 * Datele sunt preluate public din secțiunea oficială [Funcționare sistem termoficare](https://cmteb.ro/functionare_sistem_termoficare.php) a Companiei Municipale Termoenergetica București S.A.
 * Acest proiect este o inițiativă independentă open-source și nu este sponsorizat, afiliat sau dezvoltat direct de CMTEB.
 * Licență: **MIT**.
+
+---
+
+<a id="sustinere-support"></a>
+## ☕ Susținere / Support
+
+Dacă această integrare îți este utilă și dorești să sprijini dezvoltarea și mentenanța ei:
+
+> *Free to use, but not free to maintain. Sponsorship helps keep the project healthy and growing.*
+
+<a href="https://www.buymeacoffee.com/ygreq">
+  <img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+</a>
+
+Sau vizitează direct: [buymeacoffee.com/ygreq](https://www.buymeacoffee.com/ygreq)
