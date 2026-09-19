@@ -286,10 +286,11 @@ cards:
 <a id="sustinere-support"></a>
 ## ☕ Susținere / Support
 
-Dacă această integrare îți este de folos și vrei să-mi faci cinste cu o cafea, apasă pe 
+If this integration is helpful to you and you'd like to buy me a coffee / Dacă această integrare îți este de folos și vrei să-mi faci cinste cu o cafea:
 
 <a href="https://www.buymeacoffee.com/ygreq">
   <img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
 </a>
 
-Sau vizitează direct: [buymeacoffee.com/ygreq](https://www.buymeacoffee.com/ygreq)
+Direct link / Link direct: [buymeacoffee.com/ygreq](https://www.buymeacoffee.com/ygreq)
+
