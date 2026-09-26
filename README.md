@@ -12,7 +12,8 @@
 Integrare Home Assistant pentru monitorizarea în timp real a avariilor și întreruperilor de furnizare a apei calde și încălzirii din municipiul București, folosind datele oficiale publicate de **Compania Municipală Termoenergetica București (CMTEB)**.
 
 > ☕ **Free to use, but not free to maintain. Sponsorship helps keep the project healthy and growing:**  
-> [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=flat-square&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/ygreq) &nbsp; [buymeacoffee.com/ygreq](https://www.buymeacoffee.com/ygreq)
+> 
+> <a href="https://www.buymeacoffee.com/ygreq" target="_blank"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" height="56" alt="Buy Me A Coffee" /></a> &nbsp; [buymeacoffee.com/ygreq](https://www.buymeacoffee.com/ygreq)
 
 ---
 
@@ -336,8 +337,8 @@ cards:
 
 If this integration is helpful to you and you'd like to buy me a coffee / Dacă această integrare îți este de folos și vrei să-mi faci cinste cu o cafea:
 
-<a href="https://www.buymeacoffee.com/ygreq">
-  <img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+<a href="https://www.buymeacoffee.com/ygreq" target="_blank">
+  <img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" height="56" alt="Buy Me A Coffee" />
 </a>
 
 Direct link / Link direct: [buymeacoffee.com/ygreq](https://www.buymeacoffee.com/ygreq)
