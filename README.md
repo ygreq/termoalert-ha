@@ -245,7 +245,7 @@ entities:
 <a id="card-mushroom"></a>
 ### 2. Card Mushroom (Opțional)
 
-Dacă folosești **Mushroom Cards** din HACS, poți folosi un card integrat cu pastile (*chips*) aliniate de la stânga la dreapta:
+Dacă folosești **Mushroom Cards** din HACS, poți folosi un card integrat minimalist, cu iconiță dinamică inteligentă și linie de stare centrată (fără pastile):
 
 ```yaml
 type: custom:vertical-stack-in-card # sau vertical-stack
@@ -296,45 +296,28 @@ cards:
     tap_action:
       action: more-info
       entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
-  - type: custom:mushroom-chips-card
-    alignment: justify
-    chips:
-      # Pastila 1: Nivel adresă (funcționează universal: "La adresă: OK", sau personalizabil "Bloc X: OK")
-      - type: template
-        content: >-
-          {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
-            {% set est = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration') %}
-            La adresă: Avarie{% if est and est not in ['unknown', 'unavailable', 'Nicio avarie'] %} ({{ est }}){% endif %}
-          {% else %}
-            La adresă: OK
-          {% endif %}
-        icon: >-
-          {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
-            mdi:home-alert-outline
-          {% else %}
-            mdi:home-check-outline
-          {% endif %}
-        icon_color: >-
-          {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
-            red
-          {% else %}
-            green
-          {% endif %}
-        tap_action:
-          action: more-info
-          entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
 
-      # Pastila 2: Nivel sector / cartier extins
-      - type: template
-        content: >-
+  - type: markdown
+    content: >-
+      <div style="text-align: center; font-size: 13px; color: var(--secondary-text-color); padding: 10px 0 12px 0; border-top: 1px solid var(--divider-color, rgba(255, 255, 255, 0.08)); margin: 4px 16px 0 16px;">
+        {% set target = state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'termen_cautat') | string %}
+        {% set is_bloc = target.lower().startswith(('bl', 'bloc')) or target | length <= 4 or target | regex_match('^[A-Za-z]?[0-9]+[A-Za-z]?$') %}
+        {% set icon = 'mdi:office-building-outline' if is_bloc else 'mdi:home-outline' %}
+        {% set prefix = 'Bloc ' ~ target if (is_bloc and not target.lower().startswith('bl')) else (target if target else 'La adresă') %}
+        {% set is_outage = is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
+        {% set color = 'var(--error-color, #f44336)' if is_outage else 'var(--success-color, #4caf50)' %}
+        <span style="display: inline-block;">
+          <ha-icon icon="{{ icon }}" style="color: {{ color }}; --mdc-icon-size: 17px; vertical-align: -3px;"></ha-icon> 
+          <span>{{ prefix }}: <b style="color: {{ color }};">{{ 'Avarie' if is_outage else 'OK' }}</b></span>
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="display: inline-block; margin-left: 6px;">
           {% set sec = state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'sector') | default('2', true) %}
           {% set count = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages') | int(0) %}
-          Sector {{ sec }}: {{ count }} {{ 'avarie' if count == 1 else 'avarii' }}
-        icon: mdi:city-variant-outline
-        icon_color: blue
-        tap_action:
-          action: more-info
-          entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages
+          <ha-icon icon="mdi:city-variant-outline" style="color: var(--info-color, #2196f3); --mdc-icon-size: 17px; vertical-align: -3px;"></ha-icon> 
+          <span>Sector {{ sec }}: <b>{{ count }} {{ 'avarie' if count == 1 else 'avarii' }}</b></span>
+        </span>
+      </div>
 ```
 
 ---
