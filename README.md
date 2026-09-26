@@ -245,31 +245,81 @@ entities:
 <a id="card-mushroom"></a>
 ### 2. Card Mushroom (Opțional)
 
-Dacă folosești **Mushroom Cards** din HACS:
+Dacă folosești **Mushroom Cards** din HACS, poți folosi un card integrat cu pastile (*chips*) aliniate de la stânga la dreapta:
 
 ```yaml
-type: vertical-stack
+type: custom:vertical-stack-in-card # sau vertical-stack
 cards:
   - type: custom:mushroom-template-card
-    primary: Termoenergetica (Acasă)
-    secondary: >
+    primary: TermoAlert
+    secondary: >-
       {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
-        {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'agent_afectat') }} - Până la: {{ state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'estimare_punere_in_functiune') }}
+        {{ states('sensor.termoalert_sector_2_elev_stefan_stefanescu_service_status') }} • Remediere în {{ states('sensor.termoalert_sector_2_elev_stefan_stefanescu_time_remaining') }}
       {% else %}
         Serviciu activ în parametri normali
       {% endif %}
-    icon: >
+    icon: >-
       {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
         mdi:water-boiler-off
       {% else %}
         mdi:water-boiler
       {% endif %}
-    icon_color: >
+    icon_color: >-
       {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
         red
       {% else %}
         green
       {% endif %}
+    badge_icon: >-
+      {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
+        mdi:alert-circle
+      {% else %}
+        mdi:check-circle
+      {% endif %}
+    badge_color: >-
+      {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
+        red
+      {% else %}
+        green
+      {% endif %}
+    tap_action:
+      action: more-info
+      entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
+  - type: custom:mushroom-chips-card
+    alignment: justify
+    chips:
+      - type: template
+        content: >-
+          {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
+            Termen: {{ states('sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration') }}
+          {% else %}
+            Fără avarii active
+          {% endif %}
+        icon: mdi:clock-outline
+        icon_color: >-
+          {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
+            orange
+          {% else %}
+            green
+          {% endif %}
+        tap_action:
+          action: more-info
+          entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration
+      - type: template
+        content: >-
+          {% set count = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages') | int(0) %}
+          {% if count == 0 %}
+            Fără avarii în cartier
+          {% elif count == 1 %}
+            1 avarie în cartier
+          {% else %}
+            {{ count }} avarii în cartier
+          {% endif %}
+        icon: mdi:city-variant-outline
+        icon_color: blue
+        tap_action:
+          action: more-info
+          entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages
 ```
 
 ---
