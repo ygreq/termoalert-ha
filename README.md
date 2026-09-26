@@ -288,33 +288,37 @@ cards:
   - type: custom:mushroom-chips-card
     alignment: justify
     chips:
+      # Pastila 1: Nivel adresă (funcționează universal: "La adresă: OK", sau personalizabil "Bloc X: OK")
       - type: template
         content: >-
           {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
-            Termen: {{ states('sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration') }}
+            {% set est = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration') %}
+            La adresă: Avarie{% if est and est not in ['unknown', 'unavailable', 'Nicio avarie'] %} ({{ est }}){% endif %}
           {% else %}
-            Fără avarii active
+            La adresă: OK
           {% endif %}
-        icon: mdi:clock-outline
+        icon: >-
+          {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
+            mdi:home-alert-outline
+          {% else %}
+            mdi:home-check-outline
+          {% endif %}
         icon_color: >-
           {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
-            orange
+            red
           {% else %}
             green
           {% endif %}
         tap_action:
           action: more-info
-          entity: sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration
+          entity: binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage
+
+      # Pastila 2: Nivel sector / cartier extins
       - type: template
         content: >-
+          {% set sec = state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'sector') | default('2', true) %}
           {% set count = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages') | int(0) %}
-          {% if count == 0 %}
-            Fără avarii în cartier
-          {% elif count == 1 %}
-            1 avarie în cartier
-          {% else %}
-            {{ count }} avarii în cartier
-          {% endif %}
+          Sector {{ sec }}: {{ count }} {{ 'avarie' if count == 1 else 'avarii' }}
         icon: mdi:city-variant-outline
         icon_color: blue
         tap_action:
