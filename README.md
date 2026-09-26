@@ -260,9 +260,20 @@ cards:
       {% endif %}
     icon: >-
       {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
-        mdi:water-boiler-off
+        {% set st = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_service_status') | lower %}
+        {% if 'calorifer' in st or 'incalzire' in st or 'încălzire' in st %}
+          {% if 'apa' in st or 'apă' in st %}
+            mdi:pipe-leak
+          {% else %}
+            mdi:radiator-disabled
+          {% endif %}
+        {% elif 'apa' in st or 'apă' in st %}
+          mdi:shower-head-off
+        {% else %}
+          mdi:pipe-leak
+        {% endif %}
       {% else %}
-        mdi:water-boiler
+        mdi:water-thermometer
       {% endif %}
     icon_color: >-
       {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
