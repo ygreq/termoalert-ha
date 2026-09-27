@@ -316,7 +316,7 @@ cards:
           {% set sec = state_attr('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'sector') | default('2', true) %}
           {% set count = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_sector_outages') | int(0) %}
           <ha-icon icon="mdi:city-variant-outline" style="color: var(--info-color, #2196f3); --mdc-icon-size: 17px; vertical-align: -3px;"></ha-icon> 
-          <span>Sector {{ sec }}: <b>{{ count }} {{ 'avarie' if count == 1 else 'avarii' }}</b></span>
+          <span>Avarii în Sector {{ sec }}: <b>{{ count }}</b></span>
         </span>
       </div>
 ```
