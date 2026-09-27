@@ -32,7 +32,7 @@ Integrare Home Assistant pentru monitorizarea în timp real a avariilor și înt
   * [2. Oprire boiler la remediere](#automatizare-oprire-boiler)
 * [📊 Exemple Carduri Lovelace](#exemple-carduri-lovelace)
   * [1. Card Standard (Entities cu numărătoare inversă condiționată)](#card-standard-entities)
-  * [2. Card Mushroom (Opțional)](#card-mushroom)
+  * [2. Card Mushroom (Recomandat)](#card-mushroom)
 * [⚖️ Sursă de Date & Disclaimer](#sursa-de-date-disclaimer)
 * [☕ Susținere / Support](#sustinere-support)
 
@@ -244,9 +244,9 @@ entities:
 ```
 
 <a id="card-mushroom"></a>
-### 2. Card Mushroom (Opțional)
+### 2. Card Mushroom (Recomandat)
 
-Dacă folosești **Mushroom Cards** din HACS, poți folosi un card integrat minimalist, cu iconiță dinamică inteligentă și linie de stare centrată (fără pastile):
+Pentru un aspect modern, minimalist și compact pe telefon sau tabletă, poți folosi un card integrat bazat pe [**Mushroom Cards**](https://github.com/piitaya/lovelace-mushroom) (și opțional [**vertical-stack-in-card**](https://github.com/ofekashern/vertical-stack-in-card)), ambele disponibile gratuit prin HACS:
 
 ```yaml
 type: custom:vertical-stack-in-card # sau vertical-stack
@@ -255,7 +255,10 @@ cards:
     primary: TermoAlert
     secondary: >-
       {% if is_state('binary_sensor.termoalert_sector_2_elev_stefan_stefanescu_outage', 'on') %}
-        {{ states('sensor.termoalert_sector_2_elev_stefan_stefanescu_service_status') }} • Remediere în {{ states('sensor.termoalert_sector_2_elev_stefan_stefanescu_time_remaining') }}
+        {% set status = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_service_status') %}
+        {% set fix = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_estimated_restoration') %}
+        {% set rem = states('sensor.termoalert_sector_2_elev_stefan_stefanescu_time_remaining') %}
+        {{ status }} • Până la {{ fix }} (în {{ rem }})
       {% else %}
         Serviciu activ în parametri normali
       {% endif %}
